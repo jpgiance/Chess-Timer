@@ -3,4 +3,9 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="colorPrimaryTimer">#292829</color>
+    <color name="colorPrimaryDarkTimer">#111111</color>
+    <color name="colorAccentTimer">#FF4C62</color>
+    <color name="colorGreyTimer">#C4C4C4</color>
 </resources>

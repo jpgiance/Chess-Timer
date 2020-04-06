@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="TimerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryDarkTimer</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkTimer</item>
+        <item name="colorAccent">@color/colorAccentTimer</item>
+    </style>
 </resources>
