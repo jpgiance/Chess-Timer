@@ -18,16 +18,9 @@
     <string name="player_1_timer">00:30:00</string>
     <string name="player_2_timer">00:30:00</string>
 
+    //Dialogs
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="name_dialog_title">Enter player name</string>
 
-    <string-array name="timer_spinner_array">
-        <item>Increment</item>
-        <item>Decrement w/ delay</item>
-        <item>Decrement w/o delay</item>
-        <item>*Increment</item>
-    </string-array>
-
-    <string-array name="delay_spinner_array">
-        <item>Simple</item>
-        <item>Bonus</item>
-    </string-array>
 </resources>
