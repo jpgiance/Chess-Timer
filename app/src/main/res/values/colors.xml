@@ -8,4 +8,6 @@
     <color name="colorPrimaryDarkTimer">#111111</color>
     <color name="colorAccentTimer">#FF4C62</color>
     <color name="colorGreyTimer">#C4C4C4</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

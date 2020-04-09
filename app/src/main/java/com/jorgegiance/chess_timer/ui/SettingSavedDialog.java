@@ -11,20 +11,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.jorgegiance.chess_timer.R;
-import com.jorgegiance.chess_timer.util.NameDialogCallback;
+import com.jorgegiance.chess_timer.util.SettingSavedCallback;
 
-public class PlayerNameDialog extends DialogFragment {
+public class SettingSavedDialog extends DialogFragment {
 
-    NameDialogCallback dialogCallback;
-    String defaultName;
-    EditText nameText;
+    SettingSavedCallback dialogCallback;
+    EditText settingText;
 
 
-    public PlayerNameDialog( NameDialogCallback dialogCallback, String defaultName ) {
+    public SettingSavedDialog( SettingSavedCallback dialogCallback ) {
         this.dialogCallback = dialogCallback;
-        this.defaultName = defaultName;
     }
-
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState) {
@@ -34,28 +31,27 @@ public class PlayerNameDialog extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-         View mdialog = inflater.inflate(R.layout.dialog_player_name, null);
-         builder.setView(mdialog)
-                .setTitle(R.string.name_dialog_title)
+        View mdialog = inflater.inflate(R.layout.dialog_player_name, null);
+        builder.setView(mdialog)
+                .setTitle(R.string.save_setting_dialog_title)
                 // Add action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                         // User clicked OK button ...
-                        dialogCallback.nameSaved(nameText.getText().toString());
+                        // User clicked OK button ...
+                        dialogCallback.settingSaved(settingText.getText().toString());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        PlayerNameDialog.this.getDialog().cancel();
+                        SettingSavedDialog.this.getDialog().cancel();
                     }
                 });
 
-        nameText = mdialog.findViewById(R.id.player_name);
-        nameText.setText(defaultName);
+        settingText = mdialog.findViewById(R.id.player_name);
+        settingText.setText(R.string.default_setting_name);
 
         return builder.create();
     }
-
 
 }

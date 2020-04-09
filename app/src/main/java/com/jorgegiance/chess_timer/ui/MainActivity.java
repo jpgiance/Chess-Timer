@@ -1,9 +1,9 @@
 package com.jorgegiance.chess_timer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,16 +16,18 @@ import android.widget.TextView;
 import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.util.NameDialogCallback;
 import com.jorgegiance.chess_timer.util.TimerPickerDialogCallback;
+import com.jorgegiance.chess_timer.util.SettingSavedCallback;
 
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
         NameDialogCallback,
-        TimerPickerDialogCallback {
+        TimerPickerDialogCallback,
+        SettingSavedCallback{
 
     // UI components
     private TextView player1Name, player2Name;
-    private TextView player1Timer, player2Timer;
+    private TextView player1Timer, player2Timer, delayTime;
     private ImageButton saveButton, playButton;
 
     // vars
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements
         playButton = findViewById(R.id.main_start_button);
         player1Timer = findViewById(R.id.player_1_timer);
         player2Timer = findViewById(R.id.player_2_timer);
+        delayTime = findViewById(R.id.delay_timer);
 
 
         setListiners();
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         playButton.setOnClickListener(this);
         player1Timer.setOnClickListener(this);
         player2Timer.setOnClickListener(this);
+        delayTime.setOnClickListener(this);
     }
 
     private void setSpinnerAdapter() {
@@ -105,9 +109,12 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case R.id.save_settings_button: {
+                showSettingSavedDialog();
                 break;
             }
             case R.id.main_start_button: {
+                Intent gameIntent = new Intent(this, GameActivity.class);
+                startActivity(gameIntent);
                 break;
             }
             case R.id.player_1_timer:{
@@ -120,6 +127,11 @@ public class MainActivity extends AppCompatActivity implements
                 showTimePickerDialog(player2Timer.getText().toString());
                 break;
             }
+            case R.id.delay_timer: {
+                timerState = 3;
+                showTimePickerDialog(delayTime.getText().toString());
+                break;
+            }
 
 
         }
@@ -129,6 +141,13 @@ public class MainActivity extends AppCompatActivity implements
         FragmentManager fm = getSupportFragmentManager();
         PlayerNameDialog nameDialog = new PlayerNameDialog(this, name);
         nameDialog.show(fm, "fragment_alert");
+
+    }
+
+    public void showSettingSavedDialog(){
+        FragmentManager fm = getSupportFragmentManager();
+        SettingSavedDialog settingDialog = new SettingSavedDialog(this);
+        settingDialog.show(fm, "fragment_alert");
     }
 
 
@@ -145,10 +164,12 @@ public class MainActivity extends AppCompatActivity implements
 
     public void showTimePickerDialog(String time) {
         FragmentManager fm = getSupportFragmentManager();
-        TimerPickerDialog timerDialog = new TimerPickerDialog(this, time);
+        TimerPickerDialog timerDialog = new TimerPickerDialog(this, time, timerState);
         timerDialog.show(fm, "fragment_alert");
 
     }
+
+
 
     @Override
     public void timeSaved( String time ) {
@@ -159,5 +180,13 @@ public class MainActivity extends AppCompatActivity implements
         if (timerState == 2){
             player2Timer.setText(time);
         }
+        if (timerState == 3){
+            delayTime.setText(time);
+        }
+    }
+
+    @Override
+    public void settingSaved( String name ) {
+
     }
 }
