@@ -13,14 +13,16 @@ import androidx.fragment.app.DialogFragment;
 import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.util.NameDialogCallback;
 
-public class DialogPlayerName extends DialogFragment {
+public class PlayerNameDialog extends DialogFragment {
 
     NameDialogCallback dialogCallback;
+    String defaultName;
     EditText nameText;
 
 
-    public DialogPlayerName( NameDialogCallback dialogCallback ) {
+    public PlayerNameDialog( NameDialogCallback dialogCallback, String defaultName ) {
         this.dialogCallback = dialogCallback;
+        this.defaultName = defaultName;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class DialogPlayerName extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-         View mdialog = inflater.inflate(R.layout.player_name_dialog, null);
+         View mdialog = inflater.inflate(R.layout.dialog_player_name, null);
          builder.setView(mdialog)
                 .setTitle(R.string.name_dialog_title)
                 // Add action buttons
@@ -44,11 +46,12 @@ public class DialogPlayerName extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        DialogPlayerName.this.getDialog().cancel();
+                        PlayerNameDialog.this.getDialog().cancel();
                     }
                 });
 
         nameText = mdialog.findViewById(R.id.player_name);
+        nameText.setText(defaultName);
 
         return builder.create();
     }

@@ -22,5 +22,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="name_dialog_title">Enter player name</string>
+    <string name="hours">h</string>
+    <string name="minutes">m</string>
+    <string name="seconds">s</string>
 
 </resources>
