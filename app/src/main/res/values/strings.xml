@@ -24,14 +24,22 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="name_dialog_title">Enter player name:</string>
+    <string name="time_title">time:</string>
+    <string name="moves_title">moves:</string>
     <string name="default_setting_name">Set-1</string>
     <string name="hours">h</string>
     <string name="minutes">m</string>
     <string name="seconds">s</string>
     <string name="save_setting_dialog_title">Save settings as:</string>
+    <string name="save_game_dialog_title">Save game as:</string>
+    <string name="default_game_name">Game-1</string>
 
     <string name="title_activity_game">GameActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    //GameActivity
+    <string name="default_clock_time">00:00:00</string>
 
 </resources>

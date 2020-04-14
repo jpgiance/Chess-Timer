@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity implements
         delayTime = findViewById(R.id.delay_timer);
 
 
-        setListiners();
+        setListeners();
         setSpinnerAdapter();
 
 
     }
 
-    private void setListiners() {
+    private void setListeners() {
         player1Name.setOnClickListener(this);
         player2Name.setOnClickListener(this);
         saveButton.setOnClickListener(this);

@@ -25,21 +25,32 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/pause_player1_button"
+                    android:id="@+id/pause_player2_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/ic_pause_game"
                     android:backgroundTint="@color/colorGreyTimer" />
 
+                <TextView
+                    android:id="@+id/player_2_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rotation="180"
+                    android:layout_marginLeft="80dp"
+                    android:text="@string/default_clock_time"
+                    android:textColor="@color/colorAccentTimer"
+                    android:textSize="60sp"/>
+
             </LinearLayout>
 
             <View
+                android:id="@+id/change_turn_button"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="8"
                 style="?metaButtonBarStyle"
-                android:background="@color/colorWhiteTimer" />
+                android:elevation="8dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,11 +60,21 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/pause_player2_button"
+                    android:id="@+id/pause_player1_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/ic_pause_game" />
+
+                <TextView
+                    android:id="@+id/player_1_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="80dp"
+                    android:text="@string/default_clock_time"
+                    android:textColor="@color/colorAccentTimer"
+                    android:textSize="60sp"/>
+
 
             </LinearLayout>
 

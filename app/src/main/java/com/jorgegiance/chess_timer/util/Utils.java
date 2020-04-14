@@ -83,4 +83,16 @@ public class Utils {
 
         return m + ":" + s;
     }
+
+    public static String time2String(int seconds){
+        int sec = seconds % 60;
+        int min = (seconds/60) % 60;
+        int hour = (seconds/3600) % 60;
+
+        if (hour > 0){
+            return time2String(hour, min, sec);
+        }else{
+            return time2String(min, sec);
+        }
+    }
 }
