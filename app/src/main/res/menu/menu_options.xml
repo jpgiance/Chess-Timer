@@ -6,4 +6,8 @@
         android:id="@+id/settings"
         android:title="@string/menu_load_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/games"
+        android:title="@string/menu_saved_games"
+        app:showAsAction="never" />
 </menu>

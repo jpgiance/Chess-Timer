@@ -3,6 +3,7 @@
 
     //menu
     <string name="menu_load_settings">Load Settings</string>
+    <string name="menu_saved_games">Saved games</string>
 
     //MainActivity
     <string name="player_name">name</string>

@@ -1,6 +1,13 @@
 package com.jorgegiance.chess_timer.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "settings_table")
 public class SettingsSet {
+
+    @PrimaryKey
+    private String id;
 
     private String namePlayer1;
     private String namePlayer2;
@@ -12,7 +19,8 @@ public class SettingsSet {
     private String delayMode;
     private int delayTime;
 
-    public SettingsSet( String namePlayer1, String namePlayer2, int timerPlayer1, int timerPlayer2, String timerMode, String delayMode, int delayTime ) {
+    public SettingsSet( String id, String namePlayer1, String namePlayer2, int timerPlayer1, int timerPlayer2, String timerMode, String delayMode, int delayTime ) {
+        this.id = id;
         this.namePlayer1 = namePlayer1;
         this.namePlayer2 = namePlayer2;
         this.timerPlayer1 = timerPlayer1;

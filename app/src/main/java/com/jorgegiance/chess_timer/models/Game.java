@@ -1,6 +1,15 @@
 package com.jorgegiance.chess_timer.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "game_table")
 public class Game {
+
+    @PrimaryKey
+    @NonNull
+    private String id;
 
     private String namePlayer1;
     private String namePlayer2;
@@ -8,11 +17,17 @@ public class Game {
     private int movesPlayer1;
     private int movesPlayer2;
 
-    public Game( String namePlayer1, String namePlayer2, int movesPlayer1, int movesPlayer2 ) {
+    private int timePlayer1;
+    private int timePlayer2;
+
+    public Game( String id, String namePlayer1, String namePlayer2, int movesPlayer1, int movesPlayer2, int timePlayer1, int timePlayer2 ) {
+        this.id = id;
         this.namePlayer1 = namePlayer1;
         this.namePlayer2 = namePlayer2;
         this.movesPlayer1 = movesPlayer1;
         this.movesPlayer2 = movesPlayer2;
+        this.timePlayer1 = timePlayer1;
+        this.timePlayer2 = timePlayer2;
     }
 
     public String getNamePlayer1() {
@@ -45,5 +60,29 @@ public class Game {
 
     public void setMovesPlayer2( int movesPlayer2 ) {
         this.movesPlayer2 = movesPlayer2;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId( String id ) {
+        this.id = id;
+    }
+
+    public int getTimePlayer1() {
+        return timePlayer1;
+    }
+
+    public void setTimePlayer1( int timePlayer1 ) {
+        this.timePlayer1 = timePlayer1;
+    }
+
+    public int getTimePlayer2() {
+        return timePlayer2;
+    }
+
+    public void setTimePlayer2( int timePlayer2 ) {
+        this.timePlayer2 = timePlayer2;
     }
 }
