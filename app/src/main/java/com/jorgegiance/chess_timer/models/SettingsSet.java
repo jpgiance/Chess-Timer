@@ -1,5 +1,6 @@
 package com.jorgegiance.chess_timer.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,6 +8,7 @@ import androidx.room.PrimaryKey;
 public class SettingsSet {
 
     @PrimaryKey
+    @NonNull
     private String id;
 
     private String namePlayer1;
@@ -85,5 +87,13 @@ public class SettingsSet {
 
     public void setDelayTime( int delayTime ) {
         this.delayTime = delayTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId( String id ) {
+        this.id = id;
     }
 }
