@@ -1,4 +1,4 @@
-package com.jorgegiance.chess_timer.ui;
+package com.jorgegiance.chess_timer.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,7 +18,7 @@ import com.jorgegiance.chess_timer.util.GameSavedCallback;
 
 public class GameSavedDialog extends DialogFragment {
 
-    GameSavedCallback dialogCallback;
+    private GameSavedCallback dialogCallback;
 
     // UI components
     private EditText gameText;

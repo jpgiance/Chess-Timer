@@ -1,7 +1,6 @@
-package com.jorgegiance.chess_timer.ui;
+package com.jorgegiance.chess_timer.ui.dialogs;
 
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,8 +14,6 @@ import androidx.fragment.app.DialogFragment;
 import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.util.TimerPickerDialogCallback;
 import com.jorgegiance.chess_timer.util.Utils;
-
-import org.w3c.dom.Text;
 
 public class TimerPickerDialog extends DialogFragment implements NumberPicker.OnValueChangeListener {
 

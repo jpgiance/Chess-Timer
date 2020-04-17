@@ -17,11 +17,11 @@ public class SettingsSet {
     private int timerPlayer1;
     private int timerPlayer2;
 
-    private String timerMode;
-    private String delayMode;
+    private int timerMode;
+    private int delayMode;
     private int delayTime;
 
-    public SettingsSet( String id, String namePlayer1, String namePlayer2, int timerPlayer1, int timerPlayer2, String timerMode, String delayMode, int delayTime ) {
+    public SettingsSet( String id, String namePlayer1, String namePlayer2, int timerPlayer1, int timerPlayer2, int timerMode, int delayMode, int delayTime ) {
         this.id = id;
         this.namePlayer1 = namePlayer1;
         this.namePlayer2 = namePlayer2;
@@ -65,19 +65,19 @@ public class SettingsSet {
         this.timerPlayer2 = timerPlayer2;
     }
 
-    public String getTimerMode() {
+    public int getTimerMode() {
         return timerMode;
     }
 
-    public void setTimerMode( String timerMode ) {
+    public void setTimerMode( int timerMode ) {
         this.timerMode = timerMode;
     }
 
-    public String getDelayMode() {
+    public int getDelayMode() {
         return delayMode;
     }
 
-    public void setDelayMode( String delayMode ) {
+    public void setDelayMode( int delayMode ) {
         this.delayMode = delayMode;
     }
 

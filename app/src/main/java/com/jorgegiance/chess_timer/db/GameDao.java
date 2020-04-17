@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.jorgegiance.chess_timer.models.Game;
@@ -13,7 +14,7 @@ import java.util.List;
 @Dao
 public interface GameDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert( Game game );
 
     @Delete

@@ -20,6 +20,12 @@
     <string name="player_1_timer">00:30:00</string>
     <string name="player_2_timer">00:30:00</string>
     <string name="default_delay_time">30:00</string>
+    <string name="default_settingsSet_name">DEFAULT</string>
+
+
+    //Alert
+    <string name="save_settings_alert_title">Save Settings</string>
+    <string name="save_settings_alert_text">Maximum number of settings reached</string>
 
     //Dialogs
     <string name="ok">OK</string>
@@ -34,6 +40,8 @@
     <string name="save_setting_dialog_title">Save settings as:</string>
     <string name="save_game_dialog_title">Save game as:</string>
     <string name="default_game_name">Game-1</string>
+    <string name="dialog_tag">fragment_alert</string>
+    <string name="load_settings_title">Select settings</string>
 
     <string name="title_activity_game">GameActivity</string>
     <string name="dummy_button">Dummy Button</string>

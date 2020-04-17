@@ -37,6 +37,32 @@ public class Utils {
 
     }
 
+    public static int string2TotalSeconds(String time){
+
+        int sec = 0;
+        int min = 0;
+        int hour = 0;
+
+        if(time.length() == 8){
+
+            sec = Integer.parseInt(time.substring(6, 8));
+            min = Integer.parseInt(time.substring(3, 5));
+            hour = Integer.parseInt(time.substring(0, 2));
+
+            return sec + min*60 + hour*3600;
+
+        }else if (time.length() == 5){
+            sec = Integer.parseInt(time.substring(3, 5));
+            min = Integer.parseInt(time.substring(0, 2));
+
+            return sec + min*60 + hour*3600;
+
+        }else{
+            return -1;
+        }
+
+    }
+
     public static String time2String(int hours, int minutes, int seconds){
 
         String h;

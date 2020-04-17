@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface SettingsSetDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert( SettingsSet set );
 
     @Delete

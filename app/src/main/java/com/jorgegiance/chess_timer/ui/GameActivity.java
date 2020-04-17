@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jorgegiance.chess_timer.R;
+import com.jorgegiance.chess_timer.ui.dialogs.GameSavedDialog;
 import com.jorgegiance.chess_timer.util.GameSavedCallback;
 import com.jorgegiance.chess_timer.util.Utils;
 

@@ -1,44 +1,78 @@
 package com.jorgegiance.chess_timer.ui;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jorgegiance.chess_timer.R;
+import com.jorgegiance.chess_timer.models.SettingsSet;
+import com.jorgegiance.chess_timer.ui.dialogs.GameListDialog;
+import com.jorgegiance.chess_timer.ui.dialogs.LoadSettingsDialog;
+import com.jorgegiance.chess_timer.ui.dialogs.PlayerNameDialog;
+import com.jorgegiance.chess_timer.ui.dialogs.SettingSavedDialog;
+import com.jorgegiance.chess_timer.ui.dialogs.TimerPickerDialog;
+import com.jorgegiance.chess_timer.util.LoadSettingsCallback;
 import com.jorgegiance.chess_timer.util.NameDialogCallback;
 import com.jorgegiance.chess_timer.util.TimerPickerDialogCallback;
 import com.jorgegiance.chess_timer.util.SettingSavedCallback;
+import com.jorgegiance.chess_timer.util.Utils;
+import com.jorgegiance.chess_timer.viewmodel.GameViewModel;
+import com.jorgegiance.chess_timer.viewmodel.SettingsSetViewModel;
+import com.jorgegiance.chess_timer.viewmodel.UiViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
         NameDialogCallback,
         TimerPickerDialogCallback,
-        SettingSavedCallback{
+        SettingSavedCallback,
+        LoadSettingsCallback,
+        AdapterView.OnItemSelectedListener {
 
     // UI components
     private TextView player1Name, player2Name;
     private TextView player1Timer, player2Timer, delayTime;
     private ImageButton saveButton, playButton;
+    private Spinner timerSpinner, delaySpinner;
+    private MenuItem loadSettingButton, showGameListButton;
 
     // vars
     private int dialogState = 0;
     private int timerState = 0;
+
+    private SettingsSetViewModel mSettingsSetViewModel;
+    private GameViewModel mGameViewModel;
+    private UiViewModel mUiViewModel;
 
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSettingsSetViewModel = new ViewModelProvider(this).get(SettingsSetViewModel.class);
+        mGameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        mUiViewModel = new ViewModelProvider(this).get(UiViewModel.class);
 
         player1Name = findViewById(R.id.player_1_name);
         player2Name = findViewById(R.id.player_2_name);
@@ -47,11 +81,39 @@ public class MainActivity extends AppCompatActivity implements
         player1Timer = findViewById(R.id.player_1_timer);
         player2Timer = findViewById(R.id.player_2_timer);
         delayTime = findViewById(R.id.delay_timer);
+        loadSettingButton = findViewById(R.id.settings);
+        showGameListButton = findViewById(R.id.games);
 
-
-        setListeners();
         setSpinnerAdapter();
+        setListeners();
+        initSettingSet();
+        initSettingSetObserver();
 
+
+    }
+
+    private void initSettingSetObserver() {
+        mSettingsSetViewModel.getAllSettingsSet().observe(this, new Observer<List<SettingsSet>>() {
+            @Override
+            public void onChanged( List<SettingsSet> settingsSets ) {
+                mUiViewModel.settingsSetsList = settingsSets;
+            }
+        });
+    }
+
+
+    private void initSettingSet() {
+
+        mUiViewModel.defaultSet = new SettingsSet(
+                getResources().getString(R.string.default_settingsSet_name),
+                player1Name.getText().toString(),
+                player2Name.getText().toString(),
+                Utils.string2TotalSeconds(player1Timer.getText().toString()),
+                Utils.string2TotalSeconds(player2Timer.getText().toString()),
+                timerSpinner.getSelectedItemPosition(),
+                delaySpinner.getSelectedItemPosition(),
+                Utils.string2TotalSeconds(delayTime.getText().toString())
+        );
 
     }
 
@@ -63,11 +125,57 @@ public class MainActivity extends AppCompatActivity implements
         player1Timer.setOnClickListener(this);
         player2Timer.setOnClickListener(this);
         delayTime.setOnClickListener(this);
+        timerSpinner.setOnItemSelectedListener(this);
+        delaySpinner.setOnItemSelectedListener(this);
+
+
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected( @NonNull MenuItem item ) {
+
+
+        switch (item.getItemId()) {
+            case R.id.settings: {
+                showLoadSettingsDialog();
+                return true;
+            }
+            case R.id.games: {
+                showGameListDialog();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showGameListDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        GameListDialog dialog = new GameListDialog();
+        dialog.show(fm, getResources().getString(R.string.dialog_tag));
+
+    }
+
+    private void showLoadSettingsDialog() {
+
+        ArrayList<String> setsIdList = new ArrayList<>();
+        if (mUiViewModel.settingsSetsList != null) {
+            for (SettingsSet set : mUiViewModel.settingsSetsList) {
+                setsIdList.add(set.getId());
+            }
+        }
+
+        FragmentManager fm = getSupportFragmentManager();
+        LoadSettingsDialog dialog = new LoadSettingsDialog(this, setsIdList);
+        dialog.show(fm, getResources().getString(R.string.dialog_tag));
+
+    }
+
 
     private void setSpinnerAdapter() {
 
-        Spinner timerSpinner = findViewById(R.id.timer_spinner);
+        timerSpinner = findViewById(R.id.timer_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> timerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.timer_spinner_array, R.layout.spinner_item);
@@ -77,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements
         timerSpinner.setAdapter(timerAdapter);
 
 
-        Spinner delaySpinner = findViewById(R.id.delay_spinner);
+        delaySpinner = findViewById(R.id.delay_spinner);
         ArrayAdapter<CharSequence> delayAdapter = ArrayAdapter.createFromResource(this,
                 R.array.delay_spinner_array, R.layout.spinner_item);
         delayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick( View view ) {
 
-        switch (view.getId()){
-            case R.id.player_1_name:{
+        switch (view.getId()) {
+            case R.id.player_1_name: {
                 dialogState = 1;
                 showDialog(player1Name.getText().toString());
                 break;
@@ -109,7 +217,16 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case R.id.save_settings_button: {
-                showSettingSavedDialog();
+                if (mUiViewModel.settingsSetsList != null) {
+                    if (mUiViewModel.settingsSetsList.size() < 10) {
+                        showSettingSavedDialog();
+                    } else {
+                        showSettingAlert();
+                    }
+                } else {
+                    showSettingSavedDialog();
+                }
+
                 break;
             }
             case R.id.main_start_button: {
@@ -117,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(gameIntent);
                 break;
             }
-            case R.id.player_1_timer:{
+            case R.id.player_1_timer: {
                 timerState = 1;
                 showTimePickerDialog(player1Timer.getText().toString());
                 break;
@@ -137,58 +254,110 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void showDialog(String name){
+    private void showSettingAlert() {
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.save_settings_alert_title))
+                .setMessage(getResources().getString(R.string.save_settings_alert_text))
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void showDialog( String name ) {
         FragmentManager fm = getSupportFragmentManager();
         PlayerNameDialog nameDialog = new PlayerNameDialog(this, name);
-        nameDialog.show(fm, "fragment_alert");
+        nameDialog.show(fm, getResources().getString(R.string.dialog_tag));
 
     }
 
-    public void showSettingSavedDialog(){
+    public void showSettingSavedDialog() {
         FragmentManager fm = getSupportFragmentManager();
         SettingSavedDialog settingDialog = new SettingSavedDialog(this);
-        settingDialog.show(fm, "fragment_alert");
+        settingDialog.show(fm, getResources().getString(R.string.dialog_tag));
     }
 
 
     @Override
     public void nameSaved( String name ) {
-        if (dialogState == 1){
+        if (dialogState == 1) {
             player1Name.setText(name);
+            mUiViewModel.defaultSet.setNamePlayer1(name);
         }
-        if (dialogState == 2){
+        if (dialogState == 2) {
             player2Name.setText(name);
+            mUiViewModel.defaultSet.setNamePlayer2(name);
         }
     }
 
 
-    public void showTimePickerDialog(String time) {
+    public void showTimePickerDialog( String time ) {
         FragmentManager fm = getSupportFragmentManager();
         TimerPickerDialog timerDialog = new TimerPickerDialog(this, time, timerState);
-        timerDialog.show(fm, "fragment_alert");
+        timerDialog.show(fm, getResources().getString(R.string.dialog_tag));
 
     }
-
 
 
     @Override
     public void timeSaved( String time ) {
 
-        if (timerState == 1){
+        if (timerState == 1) {
             player1Timer.setText(time);
+            mUiViewModel.defaultSet.setTimerPlayer1(Utils.string2TotalSeconds(time));
         }
-        if (timerState == 2){
+        if (timerState == 2) {
             player2Timer.setText(time);
+            mUiViewModel.defaultSet.setTimerPlayer2(Utils.string2TotalSeconds(time));
         }
-        if (timerState == 3){
+        if (timerState == 3) {
             delayTime.setText(time);
+            mUiViewModel.defaultSet.setDelayTime(Utils.string2TotalSeconds(time));
         }
     }
 
     @Override
     public void settingSaved( String name ) {
-
+        mUiViewModel.defaultSet.setId(name);
+        mSettingsSetViewModel.insertSettingsSet(mUiViewModel.defaultSet);
     }
 
 
+    @Override
+    public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
+
+        switch (parent.getId()) {
+            case R.id.timer_spinner: {
+                mUiViewModel.defaultSet.setTimerMode(position);
+                break;
+            }
+            case R.id.delay_spinner: {
+                mUiViewModel.defaultSet.setDelayMode(position);
+                break;
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onNothingSelected( AdapterView<?> parent ) {
+
+    }
+
+    @Override
+    public void SettingsSetSelected( int position ) {
+
+
+        player1Name.setText(mUiViewModel.settingsSetsList.get(position).getNamePlayer1());
+        player2Name.setText(mUiViewModel.settingsSetsList.get(position).getNamePlayer2());
+        player1Timer.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getTimerPlayer1()));
+        player2Timer.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getTimerPlayer2()));
+        timerSpinner.setSelection(mUiViewModel.settingsSetsList.get(position).getTimerMode());
+        delaySpinner.setSelection(mUiViewModel.settingsSetsList.get(position).getDelayMode());
+        delayTime.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getDelayTime()));
+
+        initSettingSet();
+
+
+    }
 }

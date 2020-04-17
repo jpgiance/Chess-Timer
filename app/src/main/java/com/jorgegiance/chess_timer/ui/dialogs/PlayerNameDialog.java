@@ -1,4 +1,4 @@
-package com.jorgegiance.chess_timer.ui;
+package com.jorgegiance.chess_timer.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

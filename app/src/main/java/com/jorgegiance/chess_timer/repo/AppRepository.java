@@ -3,7 +3,6 @@ package com.jorgegiance.chess_timer.repo;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Database;
 
 import com.jorgegiance.chess_timer.db.AppDatabase;
 import com.jorgegiance.chess_timer.db.GameDao;
@@ -72,7 +71,7 @@ public class AppRepository {
     }
 
     public void deleteAllSettingsSet(){
-        AppDatabase.databaseWriteExecutor.execute(()->{
+        AppDatabase.databaseWriteExecutor.execute(() ->{
             mSettingsSetDao.deleteAll();
         });
     }

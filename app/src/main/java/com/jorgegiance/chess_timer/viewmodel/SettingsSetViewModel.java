@@ -23,7 +23,7 @@ public class SettingsSetViewModel extends AndroidViewModel {
         mAllSettingsSet = mRepo.getAllSettings();
     }
 
-    LiveData<List<SettingsSet>> getAllSettingsSet(){
+    public LiveData<List<SettingsSet>> getAllSettingsSet(){
         return mAllSettingsSet;
     }
 
