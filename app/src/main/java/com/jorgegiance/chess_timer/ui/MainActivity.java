@@ -84,17 +84,19 @@ public class MainActivity extends AppCompatActivity implements
         setSpinnerAdapter();
         setListeners();
         initSettingSet();
-        initSettingSetObserver();
+        initObserver();
 
 
     }
 
-    private void initSettingSetObserver() {
+    private void initObserver() {
+
 
         mSettingsSetViewModel.getAllSettingsSet().observe(this, new Observer<List<SettingsSet>>() {
             @Override
             public void onChanged( List<SettingsSet> settingsSets ) {
                 mMainActivityViewModel.setSettingsSetsList(settingsSets);
+
             }
         });
 
@@ -351,15 +353,14 @@ public class MainActivity extends AppCompatActivity implements
 
     public void settingsSetSelected() {
 
-        int position = mMainActivityViewModel.getSettingsSetSelected();
 
-        player1Name.setText(mMainActivityViewModel.getSettingsSetsList().get(position).getNamePlayer1());
-        player2Name.setText(mMainActivityViewModel.getSettingsSetsList().get(position).getNamePlayer2());
-        player1Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerPlayer1()));
-        player2Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerPlayer2()));
-        timerSpinner.setSelection(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerMode());
-        delaySpinner.setSelection(mMainActivityViewModel.getSettingsSetsList().get(position).getDelayMode());
-        delayTime.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getDelayTime()));
+        player1Name.setText(mMainActivityViewModel.getSettingsSetSelected().getNamePlayer1());
+        player2Name.setText(mMainActivityViewModel.getSettingsSetSelected().getNamePlayer2());
+        player1Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetSelected().getTimerPlayer1()));
+        player2Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetSelected().getTimerPlayer2()));
+        timerSpinner.setSelection(mMainActivityViewModel.getSettingsSetSelected().getTimerMode());
+        delaySpinner.setSelection(mMainActivityViewModel.getSettingsSetSelected().getDelayMode());
+        delayTime.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetSelected().getDelayTime()));
 
         initSettingSet();
 

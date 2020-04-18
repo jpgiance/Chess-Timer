@@ -13,18 +13,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.jorgegiance.chess_timer.R;
+import com.jorgegiance.chess_timer.adarters.SettingsSetAdapter;
 import com.jorgegiance.chess_timer.models.SettingsSet;
 import com.jorgegiance.chess_timer.viewmodel.MainActivityViewModel;
+import com.jorgegiance.chess_timer.viewmodel.SettingsSetViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class LoadSettingsDialog extends DialogFragment {
+public class LoadSettingsDialog extends DialogFragment implements SettingsSetAdapter.SettingsSetAdapterOnClickHandler {
 
-    private ArrayList<String> settingsSetArray;
+
+    private SettingsSetAdapter adapter;
+    private RecyclerView mRecycler;
     MainActivityViewModel mMainActivityViewModel;
+    SettingsSetViewModel mSettingsSetViewModel;
 
 
 
@@ -54,40 +65,58 @@ public class LoadSettingsDialog extends DialogFragment {
                 });
 
         mMainActivityViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
-
-        getSettingsSetIds();
-        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.dialog_load_settings_item, settingsSetArray);
-
-        ListView listView = mDialog.findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                mMainActivityViewModel.setSettingsSetSelected(position);
-                mMainActivityViewModel.setSettingsSelectedStatus(true);
-                LoadSettingsDialog.this.getDialog().cancel();
-
-
-            }
-        });
+        mSettingsSetViewModel = new ViewModelProvider(getActivity()).get(SettingsSetViewModel.class);
 
 
 
+        adapter = new SettingsSetAdapter(getContext(), this);
+        mRecycler = mDialog.findViewById(R.id.base_recycler);
+        mRecycler.setAdapter(adapter);
+        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecycler);
+        mRecycler.setHasFixedSize(true);
+      //  adapter.setSettingsSetList(mMainActivityViewModel.getSettingsSetsList());
+
+        initObserver();
 
         return builder.create();
     }
 
-    private void getSettingsSetIds() {
-        if (mMainActivityViewModel.getSettingsSetsList() != null) {
-            settingsSetArray = new ArrayList<>();
-            for (SettingsSet set : mMainActivityViewModel.getSettingsSetsList()) {
-                settingsSetArray.add(set.getId());
-            }
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove( @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target ) {
+            return false;
         }
+
+        @Override
+        public void onSwiped( @NonNull RecyclerView.ViewHolder viewHolder, int direction ) {
+            deleteSettingsSet(viewHolder.getAdapterPosition());
+        }
+    };
+
+    private void deleteSettingsSet(int position) {
+        mSettingsSetViewModel.deleteSettingsSet(mMainActivityViewModel.getSettingsSetsList().get(position));
     }
 
 
+    @Override
+    public void onClick( SettingsSet set ) {
+        mMainActivityViewModel.setSettingsSetSelected(set);
+        mMainActivityViewModel.setSettingsSelectedStatus(true);
+        LoadSettingsDialog.this.getDialog().cancel();
+    }
+
+
+    private void initObserver() {
+
+        mSettingsSetViewModel.getAllSettingsSet().observe(this, new Observer<List<SettingsSet>>() {
+            @Override
+            public void onChanged( List<SettingsSet> settingsSets ) {
+                mMainActivityViewModel.setSettingsSetsList(settingsSets);
+                adapter.setSettingsSetList(settingsSets);
+            }
+        });
+
+
+    }
 }

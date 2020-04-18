@@ -16,7 +16,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public SettingsSet defaultSet;
     private List<SettingsSet> settingsSetsList;
-    private int settingsSetSelected;
+    private SettingsSet settingsSetSelected;
     private MutableLiveData<Boolean> settingsSelectedStatus = new MutableLiveData<Boolean>();
 
 
@@ -33,11 +33,11 @@ public class MainActivityViewModel extends AndroidViewModel {
         this.settingsSetsList = settingsSetsList;
     }
 
-    public int getSettingsSetSelected() {
+    public SettingsSet getSettingsSetSelected() {
         return settingsSetSelected;
     }
 
-    public void setSettingsSetSelected( int settingsSetSelected ) {
+    public void setSettingsSetSelected( SettingsSet settingsSetSelected ) {
         this.settingsSetSelected = settingsSetSelected;
     }
 
@@ -46,6 +46,10 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public void setSettingsSelectedStatus( Boolean aBoolean ) {
+        this.settingsSelectedStatus.setValue(aBoolean);
+    }
+
+    public void deleteSetInSettingsSetList( Boolean aBoolean ) {
         this.settingsSelectedStatus.setValue(aBoolean);
     }
 }
