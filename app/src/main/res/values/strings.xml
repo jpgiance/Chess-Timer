@@ -21,6 +21,7 @@
     <string name="player_2_timer">00:30:00</string>
     <string name="default_delay_time">30:00</string>
     <string name="default_settingsSet_name">DEFAULT</string>
+    <string name="settingsSet_key">SETTING_KEY</string>
 
 
     //Alert

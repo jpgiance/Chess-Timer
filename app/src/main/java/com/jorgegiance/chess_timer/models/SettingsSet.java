@@ -1,11 +1,14 @@
 package com.jorgegiance.chess_timer.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "settings_table")
-public class SettingsSet {
+public class SettingsSet implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -31,6 +34,8 @@ public class SettingsSet {
         this.delayMode = delayMode;
         this.delayTime = delayTime;
     }
+
+
 
 
     public String getNamePlayer1() {
@@ -95,5 +100,49 @@ public class SettingsSet {
 
     public void setId( String id ) {
         this.id = id;
+    }
+
+
+    // ....parcelable implementation
+
+    protected SettingsSet( Parcel in ) {
+        id = in.readString();
+        namePlayer1 = in.readString();
+        namePlayer2 = in.readString();
+        timerPlayer1 = in.readInt();
+        timerPlayer2 = in.readInt();
+        timerMode = in.readInt();
+        delayMode = in.readInt();
+        delayTime = in.readInt();
+    }
+
+    public static final Creator<SettingsSet> CREATOR = new Creator<SettingsSet>() {
+        @Override
+        public SettingsSet createFromParcel( Parcel in ) {
+            return new SettingsSet(in);
+        }
+
+        @Override
+        public SettingsSet[] newArray( int size ) {
+            return new SettingsSet[size];
+        }
+    };
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel( Parcel dest, int flags ) {
+        dest.writeString(id);
+        dest.writeString(namePlayer1);
+        dest.writeString(namePlayer2);
+        dest.writeInt(timerPlayer1);
+        dest.writeInt(timerPlayer2);
+        dest.writeInt(timerMode);
+        dest.writeInt(delayMode);
+        dest.writeInt(delayTime);
     }
 }

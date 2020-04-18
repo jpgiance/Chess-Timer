@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.models.SettingsSet;
@@ -28,16 +27,14 @@ import com.jorgegiance.chess_timer.ui.dialogs.LoadSettingsDialog;
 import com.jorgegiance.chess_timer.ui.dialogs.PlayerNameDialog;
 import com.jorgegiance.chess_timer.ui.dialogs.SettingSavedDialog;
 import com.jorgegiance.chess_timer.ui.dialogs.TimerPickerDialog;
-import com.jorgegiance.chess_timer.util.LoadSettingsCallback;
 import com.jorgegiance.chess_timer.util.NameDialogCallback;
 import com.jorgegiance.chess_timer.util.TimerPickerDialogCallback;
 import com.jorgegiance.chess_timer.util.SettingSavedCallback;
 import com.jorgegiance.chess_timer.util.Utils;
 import com.jorgegiance.chess_timer.viewmodel.GameViewModel;
 import com.jorgegiance.chess_timer.viewmodel.SettingsSetViewModel;
-import com.jorgegiance.chess_timer.viewmodel.UiViewModel;
+import com.jorgegiance.chess_timer.viewmodel.MainActivityViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements
         NameDialogCallback,
         TimerPickerDialogCallback,
         SettingSavedCallback,
-        LoadSettingsCallback,
         AdapterView.OnItemSelectedListener {
 
     // UI components
@@ -62,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private SettingsSetViewModel mSettingsSetViewModel;
     private GameViewModel mGameViewModel;
-    private UiViewModel mUiViewModel;
+    private MainActivityViewModel mMainActivityViewModel;
 
 
     @Override
@@ -72,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mSettingsSetViewModel = new ViewModelProvider(this).get(SettingsSetViewModel.class);
         mGameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
-        mUiViewModel = new ViewModelProvider(this).get(UiViewModel.class);
+        mMainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+
 
         player1Name = findViewById(R.id.player_1_name);
         player2Name = findViewById(R.id.player_2_name);
@@ -93,18 +90,31 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initSettingSetObserver() {
+
         mSettingsSetViewModel.getAllSettingsSet().observe(this, new Observer<List<SettingsSet>>() {
             @Override
             public void onChanged( List<SettingsSet> settingsSets ) {
-                mUiViewModel.settingsSetsList = settingsSets;
+                mMainActivityViewModel.setSettingsSetsList(settingsSets);
             }
         });
+
+        mMainActivityViewModel.getSettingsSelectedStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean aBoolean ) {
+                if (aBoolean){
+                    settingsSetSelected();
+                    mMainActivityViewModel.setSettingsSelectedStatus(false);
+                }
+            }
+        });
+
+
     }
 
 
     private void initSettingSet() {
 
-        mUiViewModel.defaultSet = new SettingsSet(
+        mMainActivityViewModel.defaultSet = new SettingsSet(
                 getResources().getString(R.string.default_settingsSet_name),
                 player1Name.getText().toString(),
                 player2Name.getText().toString(),
@@ -159,15 +169,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showLoadSettingsDialog() {
 
-        ArrayList<String> setsIdList = new ArrayList<>();
-        if (mUiViewModel.settingsSetsList != null) {
-            for (SettingsSet set : mUiViewModel.settingsSetsList) {
-                setsIdList.add(set.getId());
-            }
-        }
-
         FragmentManager fm = getSupportFragmentManager();
-        LoadSettingsDialog dialog = new LoadSettingsDialog(this, setsIdList);
+        LoadSettingsDialog dialog = new LoadSettingsDialog();
         dialog.show(fm, getResources().getString(R.string.dialog_tag));
 
     }
@@ -217,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case R.id.save_settings_button: {
-                if (mUiViewModel.settingsSetsList != null) {
-                    if (mUiViewModel.settingsSetsList.size() < 10) {
+                if (mMainActivityViewModel.getSettingsSetsList() != null) {
+                    if (mMainActivityViewModel.getSettingsSetsList().size() < 10) {
                         showSettingSavedDialog();
                     } else {
                         showSettingAlert();
@@ -231,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             case R.id.main_start_button: {
                 Intent gameIntent = new Intent(this, GameActivity.class);
+                gameIntent.putExtra(getResources().getString(R.string.settingsSet_key), mMainActivityViewModel.defaultSet);
                 startActivity(gameIntent);
                 break;
             }
@@ -281,11 +285,11 @@ public class MainActivity extends AppCompatActivity implements
     public void nameSaved( String name ) {
         if (dialogState == 1) {
             player1Name.setText(name);
-            mUiViewModel.defaultSet.setNamePlayer1(name);
+            mMainActivityViewModel.defaultSet.setNamePlayer1(name);
         }
         if (dialogState == 2) {
             player2Name.setText(name);
-            mUiViewModel.defaultSet.setNamePlayer2(name);
+            mMainActivityViewModel.defaultSet.setNamePlayer2(name);
         }
     }
 
@@ -303,22 +307,22 @@ public class MainActivity extends AppCompatActivity implements
 
         if (timerState == 1) {
             player1Timer.setText(time);
-            mUiViewModel.defaultSet.setTimerPlayer1(Utils.string2TotalSeconds(time));
+            mMainActivityViewModel.defaultSet.setTimerPlayer1(Utils.string2TotalSeconds(time));
         }
         if (timerState == 2) {
             player2Timer.setText(time);
-            mUiViewModel.defaultSet.setTimerPlayer2(Utils.string2TotalSeconds(time));
+            mMainActivityViewModel.defaultSet.setTimerPlayer2(Utils.string2TotalSeconds(time));
         }
         if (timerState == 3) {
             delayTime.setText(time);
-            mUiViewModel.defaultSet.setDelayTime(Utils.string2TotalSeconds(time));
+            mMainActivityViewModel.defaultSet.setDelayTime(Utils.string2TotalSeconds(time));
         }
     }
 
     @Override
     public void settingSaved( String name ) {
-        mUiViewModel.defaultSet.setId(name);
-        mSettingsSetViewModel.insertSettingsSet(mUiViewModel.defaultSet);
+        mMainActivityViewModel.defaultSet.setId(name);
+        mSettingsSetViewModel.insertSettingsSet(mMainActivityViewModel.defaultSet);
     }
 
 
@@ -327,11 +331,11 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (parent.getId()) {
             case R.id.timer_spinner: {
-                mUiViewModel.defaultSet.setTimerMode(position);
+                mMainActivityViewModel.defaultSet.setTimerMode(position);
                 break;
             }
             case R.id.delay_spinner: {
-                mUiViewModel.defaultSet.setDelayMode(position);
+                mMainActivityViewModel.defaultSet.setDelayMode(position);
                 break;
             }
         }
@@ -344,17 +348,18 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void SettingsSetSelected( int position ) {
 
+    public void settingsSetSelected() {
 
-        player1Name.setText(mUiViewModel.settingsSetsList.get(position).getNamePlayer1());
-        player2Name.setText(mUiViewModel.settingsSetsList.get(position).getNamePlayer2());
-        player1Timer.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getTimerPlayer1()));
-        player2Timer.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getTimerPlayer2()));
-        timerSpinner.setSelection(mUiViewModel.settingsSetsList.get(position).getTimerMode());
-        delaySpinner.setSelection(mUiViewModel.settingsSetsList.get(position).getDelayMode());
-        delayTime.setText(Utils.time2String(mUiViewModel.settingsSetsList.get(position).getDelayTime()));
+        int position = mMainActivityViewModel.getSettingsSetSelected();
+
+        player1Name.setText(mMainActivityViewModel.getSettingsSetsList().get(position).getNamePlayer1());
+        player2Name.setText(mMainActivityViewModel.getSettingsSetsList().get(position).getNamePlayer2());
+        player1Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerPlayer1()));
+        player2Timer.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerPlayer2()));
+        timerSpinner.setSelection(mMainActivityViewModel.getSettingsSetsList().get(position).getTimerMode());
+        delaySpinner.setSelection(mMainActivityViewModel.getSettingsSetsList().get(position).getDelayMode());
+        delayTime.setText(Utils.time2String(mMainActivityViewModel.getSettingsSetsList().get(position).getDelayTime()));
 
         initSettingSet();
 

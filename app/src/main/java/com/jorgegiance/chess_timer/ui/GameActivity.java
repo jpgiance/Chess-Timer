@@ -4,7 +4,9 @@ package com.jorgegiance.chess_timer.ui;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -15,6 +17,8 @@ import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.ui.dialogs.GameSavedDialog;
 import com.jorgegiance.chess_timer.util.GameSavedCallback;
 import com.jorgegiance.chess_timer.util.Utils;
+import com.jorgegiance.chess_timer.viewmodel.GameActivityViewModel;
+import com.jorgegiance.chess_timer.viewmodel.GameViewModel;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -41,7 +45,10 @@ public class GameActivity extends AppCompatActivity implements
     private boolean pauseStatus = false;
     private static final String TAG = "GameActivity";
 
-    CountDownTimer clock;
+    private CountDownTimer clock;
+    private GameViewModel mGameViewModel;
+    private GameActivityViewModel mGameActivityViewModel;
+
 
 
 
@@ -53,6 +60,16 @@ public class GameActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        mGameViewModel = new ViewModelProvider(this).get(GameViewModel.class);
+        mGameActivityViewModel = new ViewModelProvider(this).get(GameActivityViewModel.class);
+
+        // ....getting intent from previous Activity
+        Intent gameIntent = getIntent();
+
+        if (gameIntent.hasExtra(getResources().getString(R.string.settingsSet_key))) {
+
+            mGameActivityViewModel.defaultSet = gameIntent.getParcelableExtra(getResources().getString(R.string.settingsSet_key));
+        }
 
         mControlsView = findViewById(R.id.button_layer);
         mContentView = findViewById(R.id.fullscreen_content);
