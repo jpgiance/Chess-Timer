@@ -20,7 +20,9 @@ public class Game {
     private int timePlayer1;
     private int timePlayer2;
 
-    public Game( String id, String namePlayer1, String namePlayer2, int movesPlayer1, int movesPlayer2, int timePlayer1, int timePlayer2 ) {
+    private int winner;
+
+    public Game( String id, String namePlayer1, String namePlayer2, int movesPlayer1, int movesPlayer2, int timePlayer1, int timePlayer2, int winner ) {
         this.id = id;
         this.namePlayer1 = namePlayer1;
         this.namePlayer2 = namePlayer2;
@@ -28,6 +30,15 @@ public class Game {
         this.movesPlayer2 = movesPlayer2;
         this.timePlayer1 = timePlayer1;
         this.timePlayer2 = timePlayer2;
+        this.winner = winner;
+    }
+
+    public int getWinner() {
+        return winner;
+    }
+
+    public void setWinner( int winner ) {
+        this.winner = winner;
     }
 
     public String getNamePlayer1() {

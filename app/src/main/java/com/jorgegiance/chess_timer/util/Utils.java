@@ -5,7 +5,9 @@ public class Utils {
     public static int string2Hours(String time){
         if(time.length() == 8){
             return Integer.parseInt(time.substring(0, 2));
-        }else{
+        }else if (time.length() == 5){
+            return 0;
+        }else {
             return -1;
         }
 

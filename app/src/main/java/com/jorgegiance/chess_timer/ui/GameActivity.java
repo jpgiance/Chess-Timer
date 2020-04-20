@@ -4,6 +4,7 @@ package com.jorgegiance.chess_timer.ui;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -14,8 +15,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jorgegiance.chess_timer.R;
+import com.jorgegiance.chess_timer.models.Game;
 import com.jorgegiance.chess_timer.ui.dialogs.GameSavedDialog;
-import com.jorgegiance.chess_timer.util.GameSavedCallback;
 import com.jorgegiance.chess_timer.util.Utils;
 import com.jorgegiance.chess_timer.viewmodel.GameActivityViewModel;
 import com.jorgegiance.chess_timer.viewmodel.GameViewModel;
@@ -25,8 +26,7 @@ import com.jorgegiance.chess_timer.viewmodel.GameViewModel;
  * status bar and navigation/system bar) with user interaction.
  */
 public class GameActivity extends AppCompatActivity implements
-        View.OnClickListener,
-        GameSavedCallback {
+        View.OnClickListener {
 
 
     // UI components
@@ -37,10 +37,10 @@ public class GameActivity extends AppCompatActivity implements
     private ImageButton pauseP1Button, pauseP2Button, saveButton, resetButton, stopButton;
 
     // vars
-    int player1Time = 0, player2Time = 0;
-    int initialPlayer1Time = 1800, initialPlayer2Time = 1800;
-    int player1Moves = 0, player2Moves = 0;
-    int increment = -1;
+//    int player1Time = 0, player2Time = 0;
+//    int initialPlayer1Time = 1800, initialPlayer2Time = 1800;
+//    int player1Moves = 0, player2Moves = 0;
+//    int increment = -1;
     private boolean turnStatus = true;      //  true-> player1,      false-> player2
     private boolean pauseStatus = false;
     private static final String TAG = "GameActivity";
@@ -69,6 +69,8 @@ public class GameActivity extends AppCompatActivity implements
         if (gameIntent.hasExtra(getResources().getString(R.string.settingsSet_key))) {
 
             mGameActivityViewModel.defaultSet = gameIntent.getParcelableExtra(getResources().getString(R.string.settingsSet_key));
+            initCurrentGame();
+
         }
 
         mControlsView = findViewById(R.id.button_layer);
@@ -83,8 +85,50 @@ public class GameActivity extends AppCompatActivity implements
         stopButton = findViewById(R.id.stop_game_button);
 
         setListeners();
-        initTimers();
-        setTurnToPlayer1();
+        initObserver();
+        initGame();
+
+
+    }
+
+    private void initObserver() {
+
+        mGameActivityViewModel.getGameSavedStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean aBoolean ) {
+                if (aBoolean){
+                    finish();
+                    mGameActivityViewModel.setGameSavedStatus(false);
+                }
+
+            }
+        });
+
+        mGameActivityViewModel.getGameDialogCancelStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean aBoolean ) {
+                if (aBoolean){
+                    setFullscreen();
+                    show();
+                    mGameActivityViewModel.setGameDialogCancelStatus(false);
+                }
+
+            }
+        });
+
+    }
+
+    private void initCurrentGame() {
+
+        mGameActivityViewModel.currentGame = new Game(
+                getResources().getString(R.string.default_game_name),
+                mGameActivityViewModel.defaultSet.getNamePlayer1(),
+                mGameActivityViewModel.defaultSet.getNamePlayer2(),
+                0,
+                0,
+                mGameActivityViewModel.defaultSet.getTimerPlayer1(),
+                mGameActivityViewModel.defaultSet.getTimerPlayer2(),
+                0);
 
 
     }
@@ -113,7 +157,7 @@ public class GameActivity extends AppCompatActivity implements
         super.onPostCreate(savedInstanceState);
 
         setFullscreen();
-        blink();
+        checkSimpleDelay();
     }
 
     private void setFullscreen() {
@@ -153,35 +197,79 @@ public class GameActivity extends AppCompatActivity implements
 
     public void changeTurn() {
 
+
+
         if (turnStatus){
-            player1Moves++;
+            mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() + 1);
+            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() + 1);
             turnStatus = false;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTimer));
 
 
         }else {
-            player2Moves++;
+            mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() + 1);
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() + 1);
             turnStatus = true;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
         }
-        blink();
+
+        checkSimpleDelay();
+
+
     }
 
+    private void checkSimpleDelay() {
+        if (mGameActivityViewModel.getDefaultSet().getDelayMode() == 0 && mGameActivityViewModel.getDefaultSet().getTimerMode() == 1) {
+
+            if (clock != null){
+                clock.cancel();
+            }
+
+           clock = new CountDownTimer(5000, 1000 ) {
+               @Override
+               public void onTick( long millisUntilFinished ) {
+
+
+               }
+
+               @Override
+               public void onFinish() {
+                   blink();
+               }
+           }.start();
+
+        }else {
+            blink();
+        }
+    }
+
+
     private void blink() {
+
         if (clock != null){
             clock.cancel();
         }
 
+
+
+
+        addDelay();
+
+
         clock = new CountDownTimer(30000000, 1000) {
 
+
             public void onTick(long millisUntilFinished) {
+
                 if (turnStatus){
-                    player1Time += increment;
-                    p1Clock.setText(Utils.time2String(player1Time));
+                    mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() + mGameActivityViewModel.getIncrement());
+
+                    p1Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer1()));
 
                 }else {
-                    player2Time += increment;
-                    p2Clock.setText(Utils.time2String(player2Time));
+                    mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() + mGameActivityViewModel.getIncrement());
+
+                    p2Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer2()));
                 }
 
             }
@@ -192,6 +280,24 @@ public class GameActivity extends AppCompatActivity implements
 
 
         }.start();
+
+
+
+    }
+
+    private void addDelay() {
+
+        if (mGameActivityViewModel.getDefaultSet().getDelayMode() == 1 && mGameActivityViewModel.getDefaultSet().getTimerMode() == 1){
+
+            if (turnStatus){
+                mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() + mGameActivityViewModel.getDefaultSet().getDelayTime());
+
+            }else {
+                mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() + mGameActivityViewModel.getDefaultSet().getDelayTime());
+
+            }
+        }
+
     }
 
     @Override
@@ -230,14 +336,12 @@ public class GameActivity extends AppCompatActivity implements
 
     private void showGameSaveDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        GameSavedDialog dialog = new GameSavedDialog(this);
+        GameSavedDialog dialog = new GameSavedDialog();
         dialog.show(fm, "fragment_alert");
     }
 
     private void reset() {
-        initTimers();
-        setTurnToPlayer1();
-        pause();
+        this.recreate();
     }
 
     private void pause() {
@@ -267,28 +371,31 @@ public class GameActivity extends AppCompatActivity implements
     }
 
 
-    private void initTimers(){
-        player1Time = initialPlayer1Time;
-        player2Time = initialPlayer2Time;
+    private void initGame(){
 
-        p1Clock.setText(Utils.time2String(player1Time));
-        p2Clock.setText(Utils.time2String(player2Time));
+        if(mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
+            mGameActivityViewModel.setIncrement(1);
+        }else if(mGameActivityViewModel.getDefaultSet().getTimerMode() == 1 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 2){
+            mGameActivityViewModel.setIncrement(-1);
+        }
 
-        player1Moves = 0;
-        player2Moves = 0;
+        if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 2 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
+            mGameActivityViewModel.getDefaultSet().setDelayTime(0);
+        }
+
+        setTurnToPlayer1();
+
+        p1Clock.setText(Utils.time2String(mGameActivityViewModel.defaultSet.getTimerPlayer1()));
+        p2Clock.setText(Utils.time2String(mGameActivityViewModel.defaultSet.getTimerPlayer2()));
+
+        mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() + 1);
+        mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
+        mGameActivityViewModel.currentGame.setMovesPlayer1(0);
+        mGameActivityViewModel.currentGame.setMovesPlayer2(0);
     }
 
-    @Override
-    public void gameSaved( String name ) {
 
-        finish();
-    }
 
-    @Override
-    public void dialogCancel() {
-        setFullscreen();
-        show();
-    }
 
 
 }

@@ -17,7 +17,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     public SettingsSet defaultSet;
     private List<SettingsSet> settingsSetsList;
     private SettingsSet settingsSetSelected;
-    private MutableLiveData<Boolean> settingsSelectedStatus = new MutableLiveData<Boolean>();
+    private MutableLiveData<Boolean> settingsSelectedStatus = new MutableLiveData<>();
 
 
     public MainActivityViewModel( @NonNull Application application ) {
