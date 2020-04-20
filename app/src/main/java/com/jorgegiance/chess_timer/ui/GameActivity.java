@@ -200,15 +200,15 @@ public class GameActivity extends AppCompatActivity implements
 
 
         if (turnStatus){
-            mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() + 1);
-            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() + 1);
+            mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() - mGameActivityViewModel.getIncrement());
             turnStatus = false;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTimer));
 
 
         }else {
-            mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() + 1);
-            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() + 1);
+            mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() - mGameActivityViewModel.getIncrement());
             turnStatus = true;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
         }
@@ -379,17 +379,24 @@ public class GameActivity extends AppCompatActivity implements
             mGameActivityViewModel.setIncrement(-1);
         }
 
+        if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
+            mGameActivityViewModel.currentGame.setTimePlayer1(-1);
+            mGameActivityViewModel.currentGame.setTimePlayer2(0);
+        }else {
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() + 1);
+            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
+        }
+
         if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 2 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
             mGameActivityViewModel.getDefaultSet().setDelayTime(0);
         }
 
         setTurnToPlayer1();
 
-        p1Clock.setText(Utils.time2String(mGameActivityViewModel.defaultSet.getTimerPlayer1()));
-        p2Clock.setText(Utils.time2String(mGameActivityViewModel.defaultSet.getTimerPlayer2()));
+        p1Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer1()));
+        p2Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer2()));
 
-        mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() + 1);
-        mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
+
         mGameActivityViewModel.currentGame.setMovesPlayer1(0);
         mGameActivityViewModel.currentGame.setMovesPlayer2(0);
     }
