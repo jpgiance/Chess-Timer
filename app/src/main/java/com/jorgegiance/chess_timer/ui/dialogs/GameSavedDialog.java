@@ -124,6 +124,15 @@ public class GameSavedDialog extends DialogFragment {
         timeP1.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer1()));
         timeP2.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer2()));
 
+        if (mGameActivityViewModel.currentGame.getWinner() == 1){
+            player1CheckBox.setChecked(true);
+            player2CheckBox.setChecked(false);
+        }
+        if (mGameActivityViewModel.currentGame.getWinner() == 2){
+            player1CheckBox.setChecked(false);
+            player2CheckBox.setChecked(true);
+        }
+
     }
 
 }

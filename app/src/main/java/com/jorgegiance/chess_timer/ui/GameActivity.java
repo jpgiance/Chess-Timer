@@ -260,7 +260,10 @@ public class GameActivity extends AppCompatActivity implements
 
             public void onTick(long millisUntilFinished) {
 
+                checkEndOfGame();
+
                 if (turnStatus){
+
                     mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() + mGameActivityViewModel.getIncrement());
 
                     p1Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer1()));
@@ -282,6 +285,27 @@ public class GameActivity extends AppCompatActivity implements
 
 
 
+    }
+
+    private void checkEndOfGame() {
+        if (!(mGameActivityViewModel.getDefaultSet().getTimerMode() == 0)){
+            if(mGameActivityViewModel.currentGame.getTimePlayer1() < 1 ){
+                mGameActivityViewModel.currentGame.setWinner(2);
+                mGameActivityViewModel.currentGame.setTimePlayer1(0);
+                pause();
+                pauseP1Button.setVisibility(View.INVISIBLE);
+                pauseP2Button.setVisibility(View.INVISIBLE);
+                showGameSaveDialog();
+            }
+            if( mGameActivityViewModel.currentGame.getTimePlayer2() < 1){
+                mGameActivityViewModel.currentGame.setWinner(1);
+                mGameActivityViewModel.currentGame.setTimePlayer2(0);
+                pause();
+                pauseP1Button.setVisibility(View.INVISIBLE);
+                pauseP2Button.setVisibility(View.INVISIBLE);
+                showGameSaveDialog();
+            }
+        }
     }
 
     private void addDelay() {
