@@ -201,14 +201,12 @@ public class GameActivity extends AppCompatActivity implements
 
         if (turnStatus){
             mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() + 1);
-            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() - mGameActivityViewModel.getIncrement());
             turnStatus = false;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTimer));
 
 
         }else {
             mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() +1);
-            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() - mGameActivityViewModel.getIncrement());
             turnStatus = true;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
         }
@@ -250,6 +248,13 @@ public class GameActivity extends AppCompatActivity implements
             clock.cancel();
         }
 
+        if (turnStatus){
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() - mGameActivityViewModel.getIncrement());
+
+        }else {
+            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() - mGameActivityViewModel.getIncrement());
+        }
+
 
 
         addDelay();
@@ -260,7 +265,6 @@ public class GameActivity extends AppCompatActivity implements
 
             public void onTick(long millisUntilFinished) {
 
-                checkEndOfGame();
 
                 if (turnStatus){
 
@@ -273,6 +277,8 @@ public class GameActivity extends AppCompatActivity implements
 
                     p2Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer2()));
                 }
+
+                checkEndOfGame();
 
             }
 
@@ -290,17 +296,17 @@ public class GameActivity extends AppCompatActivity implements
     private void checkEndOfGame() {
         if (!(mGameActivityViewModel.getDefaultSet().getTimerMode() == 0)){
             if(mGameActivityViewModel.currentGame.getTimePlayer1() < 1 ){
-                mGameActivityViewModel.currentGame.setWinner(2);
-                mGameActivityViewModel.currentGame.setTimePlayer1(0);
                 pause();
+                mGameActivityViewModel.currentGame.setWinner(2);
+
                 pauseP1Button.setVisibility(View.INVISIBLE);
                 pauseP2Button.setVisibility(View.INVISIBLE);
                 showGameSaveDialog();
             }
             if( mGameActivityViewModel.currentGame.getTimePlayer2() < 1){
-                mGameActivityViewModel.currentGame.setWinner(1);
-                mGameActivityViewModel.currentGame.setTimePlayer2(0);
                 pause();
+                mGameActivityViewModel.currentGame.setWinner(1);
+
                 pauseP1Button.setVisibility(View.INVISIBLE);
                 pauseP2Button.setVisibility(View.INVISIBLE);
                 showGameSaveDialog();
@@ -403,15 +409,15 @@ public class GameActivity extends AppCompatActivity implements
             mGameActivityViewModel.setIncrement(-1);
         }
 
-        // Timer Mode: Increment
+        // Timer Mode: Increment  or Decrement w/ delay simple   or else
         if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
-            mGameActivityViewModel.currentGame.setTimePlayer1(-1);
+            mGameActivityViewModel.currentGame.setTimePlayer1(0);
             mGameActivityViewModel.currentGame.setTimePlayer2(0);
         }else if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 1 && mGameActivityViewModel.getDefaultSet().getDelayMode() == 0){
             mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1());
             mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
         }else{
-            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() );
             mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
 
         }

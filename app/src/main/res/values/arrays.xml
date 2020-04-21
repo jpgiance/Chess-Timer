@@ -4,7 +4,6 @@
         <item>Increment</item>
         <item>Decrement w/ delay</item>
         <item>Decrement w/o delay</item>
-        <item>*Increment</item>
     </string-array>
 
     <string-array name="delay_spinner_array">
