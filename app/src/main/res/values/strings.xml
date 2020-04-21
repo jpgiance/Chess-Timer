@@ -41,6 +41,7 @@
     <string name="save_setting_dialog_title">Save settings as:</string>
     <string name="save_game_dialog_title">Save game as:</string>
     <string name="default_game_name">Game-1</string>
+    <string name="games_list_dialog_title">Games saved:</string>
     <string name="dialog_tag">fragment_alert</string>
     <string name="load_settings_title">Select settings</string>
     <string name="dots">...</string>

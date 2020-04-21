@@ -75,7 +75,7 @@ public class LoadSettingsDialog extends DialogFragment implements SettingsSetAda
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecycler);
         mRecycler.setHasFixedSize(true);
-      //  adapter.setSettingsSetList(mMainActivityViewModel.getSettingsSetsList());
+
 
         initObserver();
 

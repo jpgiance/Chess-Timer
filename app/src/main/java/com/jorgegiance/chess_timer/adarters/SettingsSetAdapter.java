@@ -31,8 +31,8 @@ public class SettingsSetAdapter extends RecyclerView.Adapter<SettingsSetAdapter.
     @Override
     public SettingsSetHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType ) {
 
-        LayoutInflater movieInflater = LayoutInflater.from(ctx);
-        View settingView = movieInflater.inflate(R.layout.load_settings_item, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(ctx);
+        View settingView = inflater.inflate(R.layout.load_settings_item, parent, false);
         SettingsSetHolder holder = new SettingsSetHolder(settingView);
 
         return holder;
@@ -51,9 +51,9 @@ public class SettingsSetAdapter extends RecyclerView.Adapter<SettingsSetAdapter.
 
 
     /**
-     * This method update Movies List state
+     * This method update SettingsSet List state
      *
-     * @param List<SettingsSet> list
+     * @param  list
      */
     public void setSettingsSetList( List<SettingsSet> list ) {
         settingsSetList = list;

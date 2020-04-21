@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jorgegiance.chess_timer.R;
+import com.jorgegiance.chess_timer.models.Game;
 import com.jorgegiance.chess_timer.models.SettingsSet;
 import com.jorgegiance.chess_timer.ui.dialogs.GameListDialog;
 import com.jorgegiance.chess_timer.ui.dialogs.LoadSettingsDialog;
@@ -90,6 +91,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initObserver() {
+
+        mGameViewModel.getAllGames().observe(this, new Observer<List<Game>>() {
+            @Override
+            public void onChanged( List<Game> games ) {
+                mMainActivityViewModel.setGamesList(games);
+            }
+        });
 
 
         mSettingsSetViewModel.getAllSettingsSet().observe(this, new Observer<List<SettingsSet>>() {

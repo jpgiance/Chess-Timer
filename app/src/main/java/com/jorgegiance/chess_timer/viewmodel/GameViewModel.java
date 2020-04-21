@@ -23,7 +23,7 @@ public class GameViewModel extends AndroidViewModel {
         mAllGames = mRepo.getAllGames();
     }
 
-    LiveData<List<Game>> getAllGames(){
+    public LiveData<List<Game>> getAllGames(){
         return mAllGames;
     }
 

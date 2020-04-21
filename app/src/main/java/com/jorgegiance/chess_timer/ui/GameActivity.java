@@ -200,14 +200,14 @@ public class GameActivity extends AppCompatActivity implements
 
 
         if (turnStatus){
-            mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() + 1);
             mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.currentGame.getTimePlayer2() - mGameActivityViewModel.getIncrement());
             turnStatus = false;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTimer));
 
 
         }else {
-            mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() +1);
             mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.currentGame.getTimePlayer1() - mGameActivityViewModel.getIncrement());
             turnStatus = true;
             changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
