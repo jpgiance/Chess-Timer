@@ -225,7 +225,7 @@ public class GameActivity extends AppCompatActivity implements
                 clock.cancel();
             }
 
-           clock = new CountDownTimer(5000, 1000 ) {
+           clock = new CountDownTimer((long) mGameActivityViewModel.getDefaultSet().getDelayTime() * 1000, 1000 ) {
                @Override
                public void onTick( long millisUntilFinished ) {
 
@@ -249,7 +249,6 @@ public class GameActivity extends AppCompatActivity implements
         if (clock != null){
             clock.cancel();
         }
-
 
 
 
@@ -373,25 +372,34 @@ public class GameActivity extends AppCompatActivity implements
 
     private void initGame(){
 
+        // Timer Mode: Increment   or   Decrement  -> set increment to  +1  or  -1
         if(mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
             mGameActivityViewModel.setIncrement(1);
         }else if(mGameActivityViewModel.getDefaultSet().getTimerMode() == 1 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 2){
             mGameActivityViewModel.setIncrement(-1);
         }
 
+        // Timer Mode: Increment
         if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
             mGameActivityViewModel.currentGame.setTimePlayer1(-1);
             mGameActivityViewModel.currentGame.setTimePlayer2(0);
-        }else {
-            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() + 1);
+        }else if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 1 && mGameActivityViewModel.getDefaultSet().getDelayMode() == 0){
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1());
             mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
+        }else{
+            mGameActivityViewModel.currentGame.setTimePlayer1(mGameActivityViewModel.defaultSet.getTimerPlayer1() - mGameActivityViewModel.getIncrement());
+            mGameActivityViewModel.currentGame.setTimePlayer2(mGameActivityViewModel.defaultSet.getTimerPlayer2());
+
         }
 
+
+        // Timer Mode: Increment   or  Decrement without Delay  -> set Delay to 0
         if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 2 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
             mGameActivityViewModel.getDefaultSet().setDelayTime(0);
         }
 
         setTurnToPlayer1();
+
 
         p1Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer1()));
         p2Clock.setText(Utils.time2String(mGameActivityViewModel.currentGame.getTimePlayer2()));

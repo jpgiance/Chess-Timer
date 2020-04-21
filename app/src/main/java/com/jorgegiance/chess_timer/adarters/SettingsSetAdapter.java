@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jorgegiance.chess_timer.R;
 import com.jorgegiance.chess_timer.models.SettingsSet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsSetAdapter extends RecyclerView.Adapter<SettingsSetAdapter.SettingsSetHolder> {

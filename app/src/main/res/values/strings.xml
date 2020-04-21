@@ -19,7 +19,7 @@
     <string name="player_2_name">Player 2</string>
     <string name="player_1_timer">00:30:00</string>
     <string name="player_2_timer">00:30:00</string>
-    <string name="default_delay_time">30:00</string>
+    <string name="default_delay_time">00:05</string>
     <string name="default_settingsSet_name">DEFAULT</string>
     <string name="settingsSet_key">SETTING_KEY</string>
 
