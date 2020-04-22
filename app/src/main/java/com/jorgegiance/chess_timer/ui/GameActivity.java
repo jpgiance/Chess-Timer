@@ -3,6 +3,7 @@ package com.jorgegiance.chess_timer.ui;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -43,7 +44,6 @@ public class GameActivity extends AppCompatActivity implements
 //    int increment = -1;
     private boolean turnStatus = true;      //  true-> player1,      false-> player2
     private boolean pauseStatus = false;
-    private static final String TAG = "GameActivity";
 
     private CountDownTimer clock;
     private GameViewModel mGameViewModel;
@@ -136,7 +136,7 @@ public class GameActivity extends AppCompatActivity implements
 
     private void setTurnToPlayer1() {
         turnStatus = true;
-        changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
+        changeTurnButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhiteTimer));
     }
 
     private void setListeners() {
@@ -202,13 +202,13 @@ public class GameActivity extends AppCompatActivity implements
         if (turnStatus){
             mGameActivityViewModel.currentGame.setMovesPlayer1(mGameActivityViewModel.currentGame.getMovesPlayer1() + 1);
             turnStatus = false;
-            changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTimer));
+            changeTurnButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDarkTimer));
 
 
         }else {
             mGameActivityViewModel.currentGame.setMovesPlayer2(mGameActivityViewModel.currentGame.getMovesPlayer2() +1);
             turnStatus = true;
-            changeTurnButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTimer));
+            changeTurnButton.setBackgroundColor( ContextCompat.getColor(this, R.color.colorWhiteTimer));
         }
 
         checkSimpleDelay();
@@ -382,16 +382,16 @@ public class GameActivity extends AppCompatActivity implements
             }
 
             pauseStatus = true;
-            pauseP1Button.setBackground(getResources().getDrawable(R.drawable.ic_play_arrow));
-            pauseP2Button.setBackground(getResources().getDrawable(R.drawable.ic_play_arrow));
+            pauseP1Button.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow));
+            pauseP2Button.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow));
 
             show();
 
         }else{
 
             pauseStatus = false;
-            pauseP1Button.setBackground(getResources().getDrawable(R.drawable.ic_pause_game));
-            pauseP2Button.setBackground(getResources().getDrawable(R.drawable.ic_pause_game));
+            pauseP1Button.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_pause_game));
+            pauseP2Button.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_pause_game));
 
             hide();
             blink();
@@ -427,6 +427,8 @@ public class GameActivity extends AppCompatActivity implements
         if (mGameActivityViewModel.getDefaultSet().getTimerMode() == 2 || mGameActivityViewModel.getDefaultSet().getTimerMode() == 0){
             mGameActivityViewModel.getDefaultSet().setDelayTime(0);
         }
+
+        mGameActivityViewModel.currentGame.setWinner(0);
 
         setTurnToPlayer1();
 

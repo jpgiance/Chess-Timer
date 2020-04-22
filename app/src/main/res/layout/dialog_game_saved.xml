@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:maxLength="8"
+        android:maxLines="1"
+        android:inputType="text"
         android:text="@string/default_game_name"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"

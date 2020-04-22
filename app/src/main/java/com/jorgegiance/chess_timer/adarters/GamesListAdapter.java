@@ -54,8 +54,13 @@ public class GamesListAdapter extends RecyclerView.Adapter<GamesListAdapter.Game
 
         if (gameList.get(position).getWinner() == 1){
             holder.player1Trophy.setVisibility(View.VISIBLE);
-        }else{
+            holder.player2Trophy.setVisibility(View.GONE);
+        }else if (gameList.get(position).getWinner() == 2){
             holder.player2Trophy.setVisibility(View.VISIBLE);
+            holder.player1Trophy.setVisibility(View.GONE);
+        }else {
+            holder.player2Trophy.setVisibility(View.GONE);
+            holder.player1Trophy.setVisibility(View.GONE);
         }
     }
 
