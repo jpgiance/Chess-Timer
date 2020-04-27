@@ -5,7 +5,12 @@ Configurable Chess Timer
 ### 🚧 Implementation in progress 👷‍♀️⛏👷🔧️👷🔧 🚧
 
 - Comments and new issues are welcome. 👍 
-- Currently not accepting external PRs that touch on the app's architecture and features. 🛑 
+- Currently not accepting external PRs that touch on the app's architecture and features. 🛑
+
+
+## Download
+
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="80">](https://play.google.com/store/apps/details?id=com.jorgegiance.chess_timer)
 
 ### Screenshots
 ![Screenshot](https://i.imgur.com/aKUNR1m.png) 
